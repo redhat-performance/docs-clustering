@@ -1,9 +1,9 @@
-"""Tests for the pure logic of cluster-docs-cli (no heavy ML deps)."""
+"""Tests for the pure logic of docs-clustering-cli (no heavy ML deps)."""
 
 import numpy as np
 
-from clusterdocs.clustering import clusters
-from clusterdocs.normalize import normalize
+from docsclustering.clustering import clusters
+from docsclustering.normalize import normalize
 
 
 def test_normalize_strips_preambles_and_noise():

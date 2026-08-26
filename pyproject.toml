@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "cluster-docs-cli"
+name = "docs-clustering-cli"
 version = "0.1.0"
 description = "Group similar documents by embedding or TF-IDF cosine similarity."
 readme = "README.md"
@@ -26,7 +26,7 @@ st = ["sentence-transformers"]
 dev = ["pytest"]
 
 [project.scripts]
-cluster-docs-cli = "clusterdocs.cli:main"
+docs-clustering-cli = "docsclustering.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

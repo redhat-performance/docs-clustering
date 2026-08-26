@@ -1,12 +1,12 @@
-"""Command-line interface for cluster-docs-cli."""
+"""Command-line interface for docs-clustering-cli."""
 
 import argparse
 import sys
 from pathlib import Path
 
-from clusterdocs.loaders import FILE_TYPE, load_docs
-from clusterdocs.report import default_threshold, print_report, write_matrix
-from clusterdocs.similarity import sim_st, sim_tfidf
+from docsclustering.loaders import FILE_TYPE, load_docs
+from docsclustering.report import default_threshold, print_report, write_matrix
+from docsclustering.similarity import sim_st, sim_tfidf
 
 
 def build_parser() -> argparse.ArgumentParser:

@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from clusterdocs.normalize import normalize
+from docsclustering.normalize import normalize
 
 # Glob pattern matched against the data directory to pick up documents.
 FILE_TYPE = "*.log"

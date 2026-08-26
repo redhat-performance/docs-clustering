@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Sequence
 
-from clusterdocs.clustering import clusters
+from docsclustering.clustering import clusters
 
 
 def write_matrix(path: Path, names: Sequence[str], S) -> None:
