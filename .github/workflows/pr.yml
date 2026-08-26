@@ -1,0 +1,33 @@
+name: PR checks
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  check:
+    name: check-all and test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.12"
+
+      - name: Bootstrap environment
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          make bootstrap
+
+      - name: Run make check-all
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          make check-all
+
+      - name: Run make test
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          make test
