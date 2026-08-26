@@ -8,7 +8,7 @@ import pytest
 from docsclustering.clustering import clusters
 from docsclustering.loaders import load_docs, load_docs_json
 from docsclustering.normalize import normalize
-from docsclustering.similarity import sim_multiset
+from docsclustering.similarity import sim_multiset, sim_setjacc
 
 
 def test_normalize_strips_preambles_and_noise():
@@ -95,4 +95,14 @@ def test_sim_multiset_counts_repetition_against_match():
     assert S[0, 2] == 0.25
     # 1 vs 2 -> 1/(1+1+2+1) = 0.2
     assert S[1, 2] == 0.2
+    assert np.allclose(np.diag(S), 1.0)
+
+
+def test_sim_setjacc_ignores_counts():
+    # Same tokens as test_sim_multiset, but counts are ignored: 0 vs 1 is now
+    # identical (same token set), unlike the multiset version.
+    S = sim_setjacc(["a b c", "a b c c", "a x"])
+    assert S[0, 1] == 1.0
+    assert S[0, 2] == 0.25  # {a,b,c} vs {a,x}
+    assert S[1, 2] == 0.25
     assert np.allclose(np.diag(S), 1.0)

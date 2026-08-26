@@ -61,3 +61,20 @@ def sim_multiset(texts: List[str]):
                 den += max(a, b)
             S[i, j] = S[j, i] = num / den if den else 0.0
     return S
+
+
+def sim_setjacc(texts: List[str]):
+    """Return a binary token Jaccard similarity matrix.
+
+    Term counts are ignored: a term present N times in one doc vs once in
+    another scores the same, so this is suited to docs where repetition is
+    not meaningful signal (and to short, order-insensitive comparisons).
+    """
+    sets = [set(t.split()) for t in texts]
+    n = len(sets)
+    S = np.eye(n)
+    for i in range(n):
+        for j in range(i + 1, n):
+            a, b = sets[i], sets[j]
+            S[i, j] = S[j, i] = len(a & b) / len(a | b) if a | b else 0.0
+    return S

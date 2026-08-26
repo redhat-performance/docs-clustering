@@ -52,7 +52,7 @@ by similarity threshold; writes the pairwise similarity matrix as CSV.
 | --- | --- | --- |
 | `--data-dir` | `data` | Directory to scan for `*.log` files (mutually exclusive with `--data-json`) |
 | `--data-json` | - | JSON file mapping document IDs to text (mutually exclusive with `--data-dir`) |
-| `--method` | `st` | `st` (sentence-transformers), `tfidf`, or `multiset` (count-aware Jaccard; good for near-duplicate docs that differ by repetition) |
+| `--method` | `st` | `st` (sentence-transformers), `tfidf`, `multiset` (count-aware Jaccard; good for near-duplicate docs that differ by repetition), or `setjacc` (binary token Jaccard; ignores word counts) |
 | `--model` | all-MiniLM-L6-v2 | Sentence-transformer model name (st only) |
 | `--threshold` | 0.6 (st) / 0.3 (tfidf) | Minimum similarity for clustering |
 | `--top-k` | all | Limit per-file ranking rows |
