@@ -12,20 +12,20 @@ Install the `docs-clustering-cli` command from this repo:
 # Minimal deps supporting `--method tfidf` only:
 uv tool install .
 # Optional heavy stack for the `--method st` embedding method:
-uv tool install --extra st .
+uv tool install ".[st]"
 ```
 
 or directly from an upstream git remote:
 
 ```sh
 uv tool install git+https://github.com/redhat-performance/docs-clustering
-uv tool install --extra st git+https://github.com/redhat-performance/docs-clustering
+uv tool install "git+https://github.com/redhat-performance/docs-clustering[st]"
 ```
 
 For an ad-hoc run without installing:
 
 ```sh
-uvx --from git+https://github.com/redhat-performance/docs-clustering docs-clustering-cli --help
+uvx --from "git+https://github.com/redhat-performance/docs-clustering[st]" docs-clustering-cli --help
 ```
 
 ## Usage
