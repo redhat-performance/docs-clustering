@@ -1,7 +1,6 @@
 """Tests for the pure logic of cluster-docs-cli (no heavy ML deps)."""
 
 import numpy as np
-import pytest
 
 from clusterdocs.clustering import clusters
 from clusterdocs.normalize import normalize
@@ -10,7 +9,7 @@ from clusterdocs.normalize import normalize
 def test_normalize_strips_preambles_and_noise():
     # First line is an investigate.py tooling header -> dropped entirely.
     text = (
-        '[2024-01-01 12:00:00] [investigate.py] keep me\n'
+        "[2024-01-01 12:00:00] [investigate.py] keep me\n"
         "warning [W0000 00:00:00.000000] url https://example.com/abc hash "
         "deadbeef1234567 num 123456"
     )

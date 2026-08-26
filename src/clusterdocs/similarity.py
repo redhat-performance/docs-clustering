@@ -30,5 +30,7 @@ def sim_tfidf(texts: List[str]):
     from sklearn.feature_extraction.text import TfidfVectorizer
     from sklearn.metrics.pairwise import cosine_similarity
 
-    X = TfidfVectorizer(sublinear_tf=True, ngram_range=(1, 2), min_df=1).fit_transform(texts)
+    X = TfidfVectorizer(sublinear_tf=True, ngram_range=(1, 2), min_df=1).fit_transform(
+        texts
+    )
     return cosine_similarity(X)

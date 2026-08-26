@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import List, Sequence
+from typing import Sequence
 
 from clusterdocs.clustering import clusters
 
