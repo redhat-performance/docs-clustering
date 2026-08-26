@@ -102,17 +102,17 @@ separate groups and nothing else. Metrics per method/model:
 - `default thr` = does the output produce the correct two clusters with the
   tool's default `--threshold` (0.3 for lexical methods, 0.6 for `st`)
 
-| Method | Intra mean | Inter mean | Margin | Min intra | Max inter | Gap | Default thr |
+| Method (/ Model) | Intra mean | Inter mean | Margin | Min intra | Max inter | Gap | Default thr |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
-| setjacc | 0.8130 | 0.0408 | 0.7722 | 0.7157 | 0.0444 | 0.6713 | correct (0.3) |
 | tfidf | 0.8161 | 0.0444 | 0.7717 | 0.7041 | 0.0457 | 0.6584 | correct (0.3) |
-| all-mpnet-base-v2 | 0.8940 | 0.3456 | 0.5484 | 0.7779 | 0.3681 | 0.4098 | correct (0.6) |
-| paraphrase-MiniLM-L6-v2 | 0.9348 | 0.4974 | 0.4374 | 0.8925 | 0.5164 | 0.3761 | correct (0.6) |
-| all-MiniLM-L6-v2 | 0.8134 | 0.3160 | 0.4974 | 0.7461 | 0.3870 | 0.3591 | correct (0.6) |
-| bge-base-en-v1.5 | 0.9636 | 0.6263 | 0.3373 | 0.9362 | 0.6434 | 0.2928 | wrong — merges (0.6) |
+| setjacc | 0.8130 | 0.0408 | 0.7722 | 0.7157 | 0.0444 | 0.6713 | correct (0.3) |
 | multiset | 0.5635 | 0.0248 | 0.5387 | 0.2606 | 0.0357 | 0.2249 | correct (0.3) / wrong (0.6) |
-| bge-small-en-v1.5 | 0.9625 | 0.7185 | 0.2440 | 0.9379 | 0.7430 | 0.1949 | wrong — merges (0.6) |
-| gte-small | 0.9803 | 0.8545 | 0.1258 | 0.9661 | 0.8655 | 0.1006 | wrong — merges (0.6) |
+| st / all-mpnet-base-v2 | 0.8940 | 0.3456 | 0.5484 | 0.7779 | 0.3681 | 0.4098 | correct (0.6) |
+| st / paraphrase-MiniLM-L6-v2 | 0.9348 | 0.4974 | 0.4374 | 0.8925 | 0.5164 | 0.3761 | correct (0.6) |
+| st / all-MiniLM-L6-v2 | 0.8134 | 0.3160 | 0.4974 | 0.7461 | 0.3870 | 0.3591 | correct (0.6) |
+| st / bge-base-en-v1.5 | 0.9636 | 0.6263 | 0.3373 | 0.9362 | 0.6434 | 0.2928 | wrong — merges (0.6) |
+| st / bge-small-en-v1.5 | 0.9625 | 0.7185 | 0.2440 | 0.9379 | 0.7430 | 0.1949 | wrong — merges (0.6) |
+| st / gte-small | 0.9803 | 0.8545 | 0.1258 | 0.9661 | 0.8655 | 0.1006 | wrong — merges (0.6) |
 
 Notes:
 
