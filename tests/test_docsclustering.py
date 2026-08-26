@@ -11,23 +11,28 @@ from docsclustering.normalize import normalize
 from docsclustering.similarity import sim_multiset, sim_setjacc
 
 
-def test_normalize_strips_preambles_and_noise():
-    # First line is an investigate.py tooling header -> dropped entirely.
-    text = (
-        "[2024-01-01 12:00:00] [investigate.py] keep me\n"
-        "warning [W0000 00:00:00.000000] url https://example.com/abc hash "
-        "deadbeef1234567 num 123456"
-    )
+def test_normalize_strips_generic_noise():
+    text = "warning url https://example.com/abc hash deadbeef1234567 num 123456"
     out = normalize(text)
-    assert "keep me" not in out
     assert "warning" in out
     assert "https" not in out
     assert "deadbeef1234567" not in out
     assert "123456" not in out
 
 
-def test_normalize_keeps_non_investigate_header():
-    # Timestamps are stripped, but the line survives (no investigate.py).
+def test_normalize_strips_date_time_formats():
+    # ISO datetime, syslog datetime, slashed date, and standalone time all go.
+    text = (
+        "[2024-01-01 12:00:00] iso "
+        "Jan  2 03:04:05 syslog "
+        "01/02/2024 slashed "
+        "03:04:05 standalone"
+    )
+    out = normalize(text)
+    assert out == "[ ] iso syslog slashed standalone"
+
+
+def test_normalize_keeps_body_around_timestamp():
     text = "[2024-01-01 12:00:00] something else\nbody text"
     # Brackets survive; only the timestamp is stripped.
     assert normalize(text) == "[ ] something else body text"

@@ -58,6 +58,27 @@ by similarity threshold; writes the pairwise similarity matrix as CSV.
 | `--top-k` | all | Limit per-file ranking rows |
 | `--out` | `similarity_matrix.csv` | CSV output path |
 
+## Preparing input data
+
+`normalize()` only does generic cleanup: URLs, common date/time formats,
+long hex strings, and runs of 5+ digits. Everything else is your job. A
+cookbook for preparing documents before feeding them to this tool:
+
+1. **Replace unique IDs with placeholders.** Component names, namespaces,
+   build/run slugs, hostnames, ticket IDs → `<COMPONENT>`, `<RUN>`, etc.
+   Otherwise every method clusters by "same component" instead of "same
+   issue".
+2. **Keep the error, drop the location.** Keep messages, reasons, status
+   codes. Generalize or remove *where*/*which instance* it happened, unless
+   that's what you want to group by.
+3. **Don't dedupe repeated blocks if the count matters.** "Failed once" vs.
+   "retried 4 times" should look different. Either keep the repeats and use
+   `--method multiset` (count-aware), or encode the count as a token, e.g.
+   `retries=4`.
+4. **Strip your own tooling headers/preambles** (log wrappers, custom
+   prefixes) before writing the JSON/log files — this tool won't recognize
+   them.
+
 ## Development
 
 ```sh
