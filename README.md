@@ -58,6 +58,26 @@ by similarity threshold; writes the pairwise similarity matrix as CSV.
 | `--top-k` | all | Limit per-file ranking rows |
 | `--out` | `similarity_matrix.csv` | CSV output path |
 
+## Similarity methods
+
+- `st` — **Sentence-BERT (SBERT) embeddings + cosine similarity** (uses the optional
+  `st` extra). Each document is embedded into a dense vector by a
+  sentence-transformers model (`all-MiniLM-L6-v2` by default) and similarity is
+  the cosine of the vectors. Captures semantics (synonyms, paraphrase), but only
+  sees the first ~256 tokens of a document and needs the torch stack.
+- `tfidf` — **TF-IDF cosine similarity** (no ML deps). Words are weighted by
+  term frequency × inverse document frequency, so corpus-common words are
+  down-weighted and rare/distinctive ones up-weighted; similarity is the cosine
+  between the weighted term vectors. Pure lexical.
+- `multiset` — **Multiset Jaccard similarity (Ruzicka coefficient)**. Each
+  document is a bag of words with counts; similarity is the sum of the per-word
+  minimum counts over the sum of the maximum counts. Count-aware: repeating a
+  term N times vs once lowers similarity, so repetition differences (e.g. 1
+  failed taskrun vs 4 identical ones) are visible.
+- `setjacc` — **Jaccard similarity coefficient (binary)**. Like multiset but
+  counts are reduced to present/absent per word. Suited to documents where
+  repetition carries no meaning.
+
 ## Preparing input data
 
 `normalize()` only does generic cleanup: URLs, common date/time formats,
