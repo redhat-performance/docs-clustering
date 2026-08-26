@@ -31,3 +31,8 @@ jobs:
         run: |
           export PATH="$HOME/.local/bin:$PATH"
           make test
+
+      - name: Run make test-example
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          make test-example
