@@ -80,6 +80,60 @@ by similarity threshold; writes the pairwise similarity matrix as CSV.
   lowers similarity, so repetition differences (e.g. 1 error row vs 4 identical
   ones) are visible.
 
+## Method comparison on example data
+
+The table below compares every method / tested model on
+`tests/data/errors-example.json`, a file with 5 documents:
+
+- `un1`, `un2`, `un3s` describe the same underlying error (failed to pull the
+  `rhacs-roxctl` image, Pod creation failed). `un3s` is significantly
+  shorter: the repeated `Unknown error` block appears once instead of four
+  times.
+- `fo1`, `fo2` are also the same issue (repo fork blocked, account blocked),
+  but a different one from the `un*` group.
+
+Ideally any method clusters `{un1, un2, un3s}` and `{fo1, fo2}` into two
+separate groups and nothing else. Metrics per method/model:
+
+- `margin` = mean within-cluster similarity − mean cross-cluster similarity
+  (bigger is a clearer separation)
+- `gap` = lowest within-cluster − highest cross-cluster similarity (positive
+  means a threshold exists that clusters perfectly; bigger is more headroom)
+- `default thr` = does the output produce the correct two clusters with the
+  tool's default `--threshold` (0.3 for lexical methods, 0.6 for `st`)
+
+| Method | Intra mean | Inter mean | Margin | Min intra | Max inter | Gap | Default thr |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| setjacc | 0.8130 | 0.0408 | 0.7722 | 0.7157 | 0.0444 | 0.6713 | correct (0.3) |
+| tfidf | 0.8161 | 0.0444 | 0.7717 | 0.7041 | 0.0457 | 0.6584 | correct (0.3) |
+| all-mpnet-base-v2 | 0.8940 | 0.3456 | 0.5484 | 0.7779 | 0.3681 | 0.4098 | correct (0.6) |
+| paraphrase-MiniLM-L6-v2 | 0.9348 | 0.4974 | 0.4374 | 0.8925 | 0.5164 | 0.3761 | correct (0.6) |
+| all-MiniLM-L6-v2 | 0.8134 | 0.3160 | 0.4974 | 0.7461 | 0.3870 | 0.3591 | correct (0.6) |
+| bge-base-en-v1.5 | 0.9636 | 0.6263 | 0.3373 | 0.9362 | 0.6434 | 0.2928 | wrong — merges (0.6) |
+| multiset | 0.5635 | 0.0248 | 0.5387 | 0.2606 | 0.0357 | 0.2249 | correct (0.3) / wrong (0.6) |
+| bge-small-en-v1.5 | 0.9625 | 0.7185 | 0.2440 | 0.9379 | 0.7430 | 0.1949 | wrong — merges (0.6) |
+| gte-small | 0.9803 | 0.8545 | 0.1258 | 0.9661 | 0.8655 | 0.1006 | wrong — merges (0.6) |
+
+Notes:
+
+- Lexical methods (`tfidf`, `setjacc`) are best here because the two issues
+  share almost no vocabulary, so cross-cluster similarity is near zero.
+- Among sentence-transformer models `all-mpnet-base-v2` is the best: high
+  within-cluster similarity and a comfortable margin below the 0.6 default
+  threshold. `bge-*` and `gte-small` are score-inflated — everything looks
+  similar — so the default threshold merges the two issues (they need a much
+  higher threshold, ≥ 0.8).
+- `multiset` is count-aware: it sees `un3s` (one repeated error block) as
+  different from `un1`/`un2` (four blocks), fragmenting the `un*` cluster at
+  `--threshold 0.6`. At the lexical default 0.3 it still groups all three
+  correctly.
+
+Reproduce e.g. with:
+
+```sh
+docs-clustering-cli --data-json tests/data/errors-example.json --method st --model sentence-transformers/all-mpnet-base-v2
+```
+
 ## Preparing input data
 
 `normalize()` only does generic cleanup: URLs, common date/time formats,
