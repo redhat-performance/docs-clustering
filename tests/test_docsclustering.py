@@ -1,8 +1,12 @@
 """Tests for the pure logic of docs-clustering-cli (no heavy ML deps)."""
 
+import json
+
 import numpy as np
+import pytest
 
 from docsclustering.clustering import clusters
+from docsclustering.loaders import load_docs, load_docs_json
 from docsclustering.normalize import normalize
 
 
@@ -47,3 +51,35 @@ def test_clusters_connected_components():
 def test_clusters_singletons_below_threshold():
     S = np.eye(3)
     assert clusters(["a", "b", "c"], S, 0.5) == [["a"], ["b"], ["c"]]
+
+
+def test_load_docs_sorted_and_normalized(tmp_path):
+    (tmp_path / "b.log").write_text("[2024-01-01 12:00:00] hello world")
+    (tmp_path / "a.log").write_text("plain body")
+    (tmp_path / "ignored.txt").write_text("not picked up")
+    names, texts = load_docs(tmp_path)
+    assert names == ["a.log", "b.log"]
+    assert texts == [
+        normalize("plain body"),
+        normalize("[2024-01-01 12:00:00] hello world"),
+    ]
+
+
+def test_load_docs_json_sorted_and_normalized(tmp_path):
+    doc = tmp_path / "docs.json"
+    doc.write_text(
+        json.dumps({"456": "second doc", "123": "[2024-01-01 12:00:00] first"})
+    )
+    names, texts = load_docs_json(doc)
+    assert names == ["123", "456"]
+    assert texts == [
+        normalize("[2024-01-01 12:00:00] first"),
+        normalize("second doc"),
+    ]
+
+
+def test_load_docs_json_non_dict_raises(tmp_path):
+    doc = tmp_path / "docs.json"
+    doc.write_text(json.dumps([1, 2, 3]))
+    with pytest.raises(TypeError):
+        load_docs_json(doc)
