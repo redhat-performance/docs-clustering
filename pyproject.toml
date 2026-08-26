@@ -21,7 +21,9 @@ dependencies = [
 
 [project.optional-dependencies]
 st = ["sentence-transformers"]
-test = ["pytest"]
+
+[dependency-groups]
+dev = ["pytest"]
 
 [project.scripts]
 cluster-docs-cli = "clusterdocs.cli:main"
