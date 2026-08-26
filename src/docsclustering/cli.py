@@ -15,13 +15,47 @@ def build_parser() -> argparse.ArgumentParser:
         description="Group similar documents by cosine similarity."
     )
     group = ap.add_mutually_exclusive_group()
-    group.add_argument("--data-dir", type=Path, default=Path("data"))
-    group.add_argument("--data-json", type=Path, default=None)
-    ap.add_argument("--method", choices=["st", "tfidf"], default="st")
-    ap.add_argument("--model", default="sentence-transformers/all-MiniLM-L6-v2")
-    ap.add_argument("--threshold", type=float, default=None)
-    ap.add_argument("--top-k", type=int, default=None)
-    ap.add_argument("--out", type=Path, default=Path("similarity_matrix.csv"))
+    group.add_argument(
+        "--data-dir",
+        type=Path,
+        default=Path("data"),
+        help="Directory to scan for " + FILE_TYPE + " files (default: %(default)s)",
+    )
+    group.add_argument(
+        "--data-json",
+        type=Path,
+        default=None,
+        help="JSON file mapping document IDs to text; exclusive with --data-dir",
+    )
+    ap.add_argument(
+        "--method",
+        choices=["st", "tfidf"],
+        default="st",
+        help="Similarity method: st (sentence-transformers) or tfidf (default: %(default)s)",
+    )
+    ap.add_argument(
+        "--model",
+        default="sentence-transformers/all-MiniLM-L6-v2",
+        help="Sentence-transformer model name, st only (default: %(default)s)",
+    )
+    ap.add_argument(
+        "--threshold",
+        type=float,
+        default=None,
+        help="Minimum similarity for clustering (default: 0.6 for st, 0.3 for tfidf)",
+    )
+    ap.add_argument(
+        "--top-k",
+        type=int,
+        default=None,
+        help="Limit per-file ranking rows (default: all)",
+    )
+    ap.add_argument(
+        "--out",
+        type=Path,
+        default=Path("similarity_matrix.csv"),
+        help="CSV output path (default: %(default)s)",
+    )
     return ap
 
 
