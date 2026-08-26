@@ -50,6 +50,7 @@ by similarity threshold; writes the pairwise similarity matrix as CSV.
 ## Development
 
 ```sh
-uv sync --extra st
-uv run pytest
+make bootstrap   # one time venv setup and pre-commit installation
+make check-all   # run linters
+make test   # run tests
 ```
