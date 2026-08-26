@@ -29,9 +29,9 @@ def build_parser() -> argparse.ArgumentParser:
     )
     ap.add_argument(
         "--method",
-        choices=["st", "tfidf", "multiset", "setjacc"],
-        default="st",
-        help="Similarity method: st (sentence-transformers), tfidf, multiset (count-aware Jaccard), or setjacc (binary token Jaccard) (default: %(default)s)",
+        choices=["tfidf", "st", "setjacc", "multiset"],
+        default="tfidf",
+        help="Similarity method: tfidf, st (sentence-transformers), setjacc (binary token Jaccard), or multiset (count-aware Jaccard) (default: %(default)s)",
     )
     ap.add_argument(
         "--model",
