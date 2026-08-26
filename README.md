@@ -47,8 +47,8 @@ docs-clustering-cli --data-json docs.json --method multiset
 
 Prints per-file rankings, ranked similar pairs, and clusters of document picked
 by similarity threshold. With `--out`, the exact same data is dumped as a
-structured JSON file instead of writing a CSV, which is meant to simplify
-integration with other tools that consume the output to categorize errors:
+structured JSON file, which is meant to simplify integration with other tools
+that consume the output to categorize errors:
 
 ```json
 {
