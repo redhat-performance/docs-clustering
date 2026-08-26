@@ -18,14 +18,14 @@ uv tool install --extra st .
 or directly from an upstream git remote:
 
 ```sh
-uv tool install git+https://github.com/example/docs-clustering-cli
-uv tool install --extra st git+https://github.com/example/docs-clustering-cli
+uv tool install git+https://github.com/redhat-performance/docs-clustering
+uv tool install --extra st git+https://github.com/redhat-performance/docs-clustering
 ```
 
 For an ad-hoc run without installing:
 
 ```sh
-uvx --from git+https://github.com/example/docs-clustering-cli docs-clustering-cli --help
+uvx --from git+https://github.com/redhat-performance/docs-clustering docs-clustering-cli --help
 ```
 
 ## Usage
