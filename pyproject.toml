@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cluster-docs-cli"
+version = "0.1.0"
+description = "Group similar documents by embedding or TF-IDF cosine similarity."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+keywords = ["clustering", "similarity", "tf-idf", "embeddings"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Topic :: Text Processing",
+]
+dependencies = [
+    "numpy",
+    "scikit-learn",
+]
+
+[project.optional-dependencies]
+st = ["sentence-transformers"]
+test = ["pytest"]
+
+[project.scripts]
+cluster-docs-cli = "clusterdocs.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
