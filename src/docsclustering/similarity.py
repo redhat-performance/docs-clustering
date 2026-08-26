@@ -1,6 +1,9 @@
 """Cosine similarity matrices between documents."""
 
+from collections import Counter
 from typing import List
+
+import numpy as np
 
 
 def sim_st(texts: List[str], model_name: str):
@@ -34,3 +37,27 @@ def sim_tfidf(texts: List[str]):
         texts
     )
     return cosine_similarity(X)
+
+
+def sim_multiset(texts: List[str]):
+    """Return a count-aware multiset Jaccard similarity matrix.
+
+    Token counts matter: a term repeated N times in one doc vs once in
+    another lowers their overlap (sum of min counts over sum of max counts), so
+    a repetition mismatch between docs counts against similarity.  Works on any
+    text; for ordinary prose it behaves like plain Jaccard.
+    """
+    counters = [Counter(t.split()) for t in texts]
+    n = len(counters)
+    S = np.eye(n)
+    for i in range(n):
+        for j in range(i + 1, n):
+            ci, cj = counters[i], counters[j]
+            num = 0.0
+            den = 0.0
+            for t in set(ci) | set(cj):
+                a, b = ci.get(t, 0), cj.get(t, 0)
+                num += min(a, b)
+                den += max(a, b)
+            S[i, j] = S[j, i] = num / den if den else 0.0
+    return S

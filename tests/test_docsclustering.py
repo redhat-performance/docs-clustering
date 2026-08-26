@@ -8,6 +8,7 @@ import pytest
 from docsclustering.clustering import clusters
 from docsclustering.loaders import load_docs, load_docs_json
 from docsclustering.normalize import normalize
+from docsclustering.similarity import sim_multiset
 
 
 def test_normalize_strips_preambles_and_noise():
@@ -83,3 +84,15 @@ def test_load_docs_json_non_dict_raises(tmp_path):
     doc.write_text(json.dumps([1, 2, 3]))
     with pytest.raises(TypeError):
         load_docs_json(doc)
+
+
+def test_sim_multiset_counts_repetition_against_match():
+    # Doc 1 is doc 0 with one extra copy of "c"; doc 2 only shares "a".
+    S = sim_multiset(["a b c", "a b c c", "a x"])
+    # 0 vs 1: min/max over {a,b,c} -> (1+1+1)/(1+1+2) = 0.75
+    assert S[0, 1] == 0.75
+    # 0 vs 2: shared "a" only -> 1/(1+1+1+1) = 0.25
+    assert S[0, 2] == 0.25
+    # 1 vs 2 -> 1/(1+1+2+1) = 0.2
+    assert S[1, 2] == 0.2
+    assert np.allclose(np.diag(S), 1.0)

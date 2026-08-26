@@ -56,4 +56,4 @@ def print_report(
 
 def default_threshold(method: str) -> float:
     """Return the fallback similarity threshold for a method."""
-    return 0.3 if method == "tfidf" else 0.6
+    return 0.3 if method in ("tfidf", "multiset") else 0.6

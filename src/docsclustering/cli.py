@@ -6,7 +6,7 @@ from pathlib import Path
 
 from docsclustering.loaders import FILE_TYPE, load_docs, load_docs_json
 from docsclustering.report import default_threshold, print_report, write_matrix
-from docsclustering.similarity import sim_st, sim_tfidf
+from docsclustering.similarity import sim_multiset, sim_st, sim_tfidf
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -29,9 +29,9 @@ def build_parser() -> argparse.ArgumentParser:
     )
     ap.add_argument(
         "--method",
-        choices=["st", "tfidf"],
+        choices=["st", "tfidf", "multiset"],
         default="st",
-        help="Similarity method: st (sentence-transformers) or tfidf (default: %(default)s)",
+        help="Similarity method: st (sentence-transformers), tfidf, or multiset (count-aware Jaccard) (default: %(default)s)",
     )
     ap.add_argument(
         "--model",
@@ -72,7 +72,12 @@ def main(argv=None) -> None:
             sys.exit(f"No documents in {a.data_json}")
         sys.exit(f"No {FILE_TYPE} files in {a.data_dir}")
 
-    S = sim_tfidf(texts) if a.method == "tfidf" else sim_st(texts, a.model)
+    if a.method == "tfidf":
+        S = sim_tfidf(texts)
+    elif a.method == "multiset":
+        S = sim_multiset(texts)
+    else:
+        S = sim_st(texts, a.model)
     thr = a.threshold if a.threshold is not None else default_threshold(a.method)
 
     write_matrix(a.out, names, S)
