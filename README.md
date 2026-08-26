@@ -2,15 +2,16 @@
 
 Group similar documents by embedding or TF-IDF cosine similarity.
 
-Requires [uv](https://docs.astral.sh/uv/) (`curl -LsSf https://astral.sh/uv/install.sh | sh`).
-
 ## Install
+
+Requires [uv](https://docs.astral.sh/uv/).
 
 Install the `cluster-docs-cli` command from this repo:
 
 ```sh
+# Minimal deps supporting `--method tfidf` only:
 uv tool install .
-# optional heavy stack for the default embedding method:
+# Optional heavy stack for the `--method st` embedding method:
 uv tool install --extra st .
 ```
 
@@ -21,10 +22,10 @@ uv tool install git+https://github.com/example/cluster-docs-cli
 uv tool install --extra st git+https://github.com/example/cluster-docs-cli
 ```
 
-The binary lands in `~/.local/bin`. For an ad-hoc run without installing:
+For an ad-hoc run without installing:
 
 ```sh
-uvx --from . cluster-docs-cli --data-dir data --method tfidf
+uvx --from git+https://github.com/example/cluster-docs-cli cluster-docs-cli --help
 ```
 
 ## Usage
@@ -34,8 +35,8 @@ cluster-docs-cli --data-dir data --method tfidf --out similarity_matrix.csv
 cluster-docs-cli --data-dir data --method st --model sentence-transformers/all-MiniLM-L6-v2
 ```
 
-Prints per-file rankings, ranked similar pairs, and clusters; writes the
-pairwise similarity matrix as CSV.
+Prints per-file rankings, ranked similar pairs, and clusters of document picked
+by similarity threshold; writes the pairwise similarity matrix as CSV.
 
 | Flag | Default | Meaning |
 | --- | --- | --- |
@@ -49,7 +50,6 @@ pairwise similarity matrix as CSV.
 ## Development
 
 ```sh
-uv sync                 # create .venv, install project + dev group, write uv.lock
-uv run pytest           # run tests
-uv run cluster-docs-cli --data-dir data --method tfidf
+uv sync --extra st
+uv run pytest
 ```
