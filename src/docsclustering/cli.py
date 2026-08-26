@@ -5,7 +5,12 @@ import sys
 from pathlib import Path
 
 from docsclustering.loaders import FILE_TYPE, load_docs, load_docs_json
-from docsclustering.report import default_threshold, print_report, write_matrix
+from docsclustering.report import (
+    collect_report,
+    default_threshold,
+    print_report,
+    write_json_report,
+)
 from docsclustering.similarity import sim_multiset, sim_setjacc, sim_st, sim_tfidf
 
 
@@ -53,8 +58,8 @@ def build_parser() -> argparse.ArgumentParser:
     ap.add_argument(
         "--out",
         type=Path,
-        default=Path("similarity_matrix.csv"),
-        help="CSV output path (default: %(default)s)",
+        default=None,
+        help="Write the structured JSON report to this file; when omitted the report is only printed to stdout (default: none)",
     )
     return ap
 
@@ -82,11 +87,17 @@ def main(argv=None) -> None:
         S = sim_st(texts, a.model)
     thr = a.threshold if a.threshold is not None else default_threshold(a.method)
 
-    write_matrix(a.out, names, S)
-    model_label = a.model if a.method == "st" else "-"
-    print_report(
-        names, S, method=a.method, model_label=model_label, threshold=thr, top_k=a.top_k
+    data = collect_report(
+        names,
+        S,
+        method=a.method,
+        model_label=a.model if a.method == "st" else "-",
+        threshold=thr,
+        top_k=a.top_k,
     )
+    if a.out is not None:
+        write_json_report(a.out, data)
+    print_report(data)
 
 
 if __name__ == "__main__":

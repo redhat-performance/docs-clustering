@@ -31,8 +31,8 @@ uvx --from git+https://github.com/redhat-performance/docs-clustering docs-cluste
 ## Usage
 
 ```sh
-docs-clustering-cli --data-dir data --method tfidf --out similarity_matrix.csv
-docs-clustering-cli --data-dir data --method st --model sentence-transformers/all-MiniLM-L6-v2
+docs-clustering-cli --data-dir data --method tfidf --out report.json
+docs-clustering-cli --data-dir data --method st --model sentence-transformers/all-MiniLM-L6-v2 --out report.json
 docs-clustering-cli --data-json docs.json --method multiset
 ```
 
@@ -46,7 +46,30 @@ docs-clustering-cli --data-json docs.json --method multiset
 ```
 
 Prints per-file rankings, ranked similar pairs, and clusters of document picked
-by similarity threshold; writes the pairwise similarity matrix as CSV.
+by similarity threshold. With `--out`, the exact same data is dumped as a
+structured JSON file instead of writing a CSV, which is meant to simplify
+integration with other tools that consume the output to categorize errors:
+
+```json
+{
+  "method": "tfidf",
+  "model": "-",
+  "threshold": 0.3,
+  "rankings": {
+    "fo1": [["fo2", 0.7041]],
+    "un1": [["un2", 0.8161], ["un3s", 0.7041]]
+  },
+  "pairs": [["un1", "un2", 0.8161], ["fo1", "fo2", 0.7041]],
+  "clusters": [["fo1", "fo2"], ["un1", "un2", "un3s"]]
+}
+```
+
+- `rankings`: per-document list of `[other-id, similarity]`, most similar first
+  (respects `--top-k`)
+- `pairs`: global `[id, other-id, similarity]` list, highest similarity first
+- `clusters`: the grouping your categorizer should consume
+
+With no `--out`, nothing is written to disk; the report only goes to stdout.
 
 | Flag | Default | Meaning |
 | --- | --- | --- |
@@ -56,7 +79,7 @@ by similarity threshold; writes the pairwise similarity matrix as CSV.
 | `--model` | all-MiniLM-L6-v2 | Sentence-transformer model name (st only) |
 | `--threshold` | 0.6 (st) / 0.3 (tfidf) | Minimum similarity for clustering |
 | `--top-k` | all | Limit per-file ranking rows |
-| `--out` | `similarity_matrix.csv` | CSV output path |
+| `--out` | (none) | JSON report file; omit to only print to stdout (no file written) |
 
 ## Similarity methods
 

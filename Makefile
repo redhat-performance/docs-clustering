@@ -34,14 +34,14 @@ test:
 
 test-example:
 # Smoke test: every method plus st with the default model must run on the
-# example data without tracebacks. Output CSV goes to /tmp, stdout is muted;
+# example data without tracebacks. Output JSON goes to /tmp, stdout is muted;
 # a traceback hits stderr and a non-zero exit, failing the target.
 	@echo "==> test-example: tfidf"
-	@uv run docs-clustering-cli --data-json tests/data/errors-example.json --method tfidf --out /tmp/sim_tfidf.csv >/dev/null
+	@uv run docs-clustering-cli --data-json tests/data/errors-example.json --method tfidf --out /tmp/sim_tfidf.json >/dev/null
 	@echo "==> test-example: setjacc"
-	@uv run docs-clustering-cli --data-json tests/data/errors-example.json --method setjacc --out /tmp/sim_setjacc.csv >/dev/null
+	@uv run docs-clustering-cli --data-json tests/data/errors-example.json --method setjacc --out /tmp/sim_setjacc.json >/dev/null
 	@echo "==> test-example: multiset"
-	@uv run docs-clustering-cli --data-json tests/data/errors-example.json --method multiset --out /tmp/sim_multiset.csv >/dev/null
+	@uv run docs-clustering-cli --data-json tests/data/errors-example.json --method multiset --out /tmp/sim_multiset.json >/dev/null
 	@echo "==> test-example: st (default model)"
-	@uv run docs-clustering-cli --data-json tests/data/errors-example.json --method st --out /tmp/sim_st.csv >/dev/null
+	@uv run docs-clustering-cli --data-json tests/data/errors-example.json --method st --out /tmp/sim_st.json >/dev/null
 	@echo "==> test-example OK"
